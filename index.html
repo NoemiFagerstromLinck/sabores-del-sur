@@ -469,6 +469,14 @@
             z-index: 2;
             filter: drop-shadow(0 8px 16px rgba(0,0,0,0.35));
         }
+        .promo-popup-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
         .promo-popup-cuerpo {
             padding: 22px 24px 26px;
             text-align: center;
@@ -602,6 +610,14 @@
             position: relative;
             z-index: 2;
             filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+        }
+        .promo-card-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
         .promo-badge-hoy {
             position: absolute;
@@ -819,6 +835,7 @@
             <div class="promo-card-media">
                 <span class="promo-badge-hoy" id="promo-badge-hoy" style="display:none;">🔥 SOLO HOY</span>
                 <span class="promo-badge-vigencia" id="promo-vigencia">📅 VISTA PREVIA</span>
+                <img id="promo-img" src="" alt="" style="display:none;">
                 <span class="promo-emoji" id="promo-emoji">🎉</span>
             </div>
             <div class="promo-card-body">
@@ -1198,6 +1215,7 @@
         <div class="modal promo-popup">
             <button class="modal-cerrar" id="promo-popup-cerrar" aria-label="Cerrar">✕</button>
             <div class="promo-popup-media">
+                <img id="promo-popup-img" src="" alt="" style="display:none;">
                 <span class="promo-popup-emoji" id="promo-popup-emoji">🎉</span>
             </div>
             <div class="promo-popup-cuerpo">
@@ -1382,16 +1400,16 @@
         };
 
         // ===== PROMOS DE LA SEMANA (edita este bloque cuando tengas las promos reales) =====
-        // Campos por promo: titulo, detalle, emoji, precioOriginal, precioPromo, ahorro
-        // Deja precios vacíos ("") mientras no tengas la promo confirmada
+        // Campos por promo: titulo, detalle, emoji, img, precioOriginal, precioPromo, ahorro
+        // Deja precios vacíos ("") mientras no tengas la promo confirmada; y img vacía ("") si no hay foto
         const promos = {
-            lunes:    { titulo: "Waffle Salado",     detalle: "Promo de waffle salado — ¡muy pronto le ponemos precio! Pregunta por WhatsApp 👀", emoji: "🧇", precioOriginal: "", precioPromo: "", ahorro: "" },
-            martes:   { titulo: "Martes de Handrolls", detalle: "2 handrolls Pollo & Palta por $6.000 — llévate tu combo y ahorra 🍣", emoji: "🍣", precioOriginal: "2x $7.000", precioPromo: "2x $6.000", ahorro: "$1.000" },
-            miercoles:{ titulo: "Miércoles de Empanadas", detalle: "Empanadas: 1 por $3.000 o 2 por $5.000 — elige tu relleno favorito 🥟", emoji: "🥟", precioOriginal: "2x $6.000", precioPromo: "2x $5.000", ahorro: "$1.000" },
-            jueves:   { titulo: "Jueves de Pizza",    detalle: "Pizza familiar a elección + bebida de 1 litro por $8.990 🍕", emoji: "🍕", precioOriginal: "", precioPromo: "$8.990", ahorro: "" },
-            viernes:  { titulo: "Viernes de Waffles", detalle: "¡Solo por hoy! Waffle a $5.000 c/u — elige tu base (Nutella, manjar o miel) y agrégale lo que quieras 🧇", emoji: "🧇", precioOriginal: "$5.500", precioPromo: "$5.000", ahorro: "$500" },
-            sabado:   { titulo: "Promo Sábado",    detalle: "PRÓXIMAMENTE — sábado de sabores del sur ☀️", emoji: "🥞", precioOriginal: "", precioPromo: "", ahorro: "" },
-            domingo:  { titulo: "Promo Domingo",   detalle: "PRÓXIMAMENTE — domingo en familia 🍪", emoji: "🍪", precioOriginal: "", precioPromo: "", ahorro: "" }
+            lunes:    { titulo: "Waffle Salado",     detalle: "Promo de waffle salado — ¡muy pronto le ponemos precio! Pregunta por WhatsApp 👀", emoji: "🧇", img: "img/waffle.jpg?v=3", precioOriginal: "", precioPromo: "", ahorro: "" },
+            martes:   { titulo: "Martes de Handrolls", detalle: "2 handrolls Pollo & Palta por $6.000 — llévate tu combo y ahorra 🍣", emoji: "🍣", img: "img/handrolls.jpg?v=3", precioOriginal: "2x $7.000", precioPromo: "2x $6.000", ahorro: "$1.000" },
+            miercoles:{ titulo: "Miércoles de Empanadas", detalle: "Empanadas: 1 por $3.000 o 2 por $5.000 — elige tu relleno favorito 🥟", emoji: "🥟", img: "img/empanada-carne-queso.jpg?v=3", precioOriginal: "2x $6.000", precioPromo: "2x $5.000", ahorro: "$1.000" },
+            jueves:   { titulo: "Jueves de Pizza",    detalle: "Pizza familiar a elección + bebida de 1 litro por $8.990 🍕", emoji: "🍕", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80", precioOriginal: "", precioPromo: "$8.990", ahorro: "" },
+            viernes:  { titulo: "Viernes de Waffles", detalle: "¡Solo por hoy! Waffle a $5.000 c/u — elige tu base (Nutella, manjar o miel) y agrégale lo que quieras 🧇", emoji: "🧇", img: "img/waffle.jpg?v=3", precioOriginal: "$5.500", precioPromo: "$5.000", ahorro: "$500" },
+            sabado:   { titulo: "Promo Sábado",    detalle: "PRÓXIMAMENTE — sábado de sabores del sur ☀️", emoji: "🥞", img: "", precioOriginal: "", precioPromo: "", ahorro: "" },
+            domingo:  { titulo: "Promo Domingo",   detalle: "PRÓXIMAMENTE — domingo en familia 🍪", emoji: "🍪", img: "", precioOriginal: "", precioPromo: "", ahorro: "" }
         };
 
         const diasCortos = ["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"];
@@ -1428,6 +1446,17 @@
             document.getElementById('promo-titulo').textContent = p.titulo;
             document.getElementById('promo-desc').textContent = p.detalle;
             document.getElementById('promo-emoji').textContent = p.emoji || "🎉";
+            const promoImg = document.getElementById('promo-img');
+            const promoEmoji = document.getElementById('promo-emoji');
+            if (p.img) {
+                promoImg.src = p.img;
+                promoImg.style.display = 'block';
+                promoEmoji.style.display = 'none';
+            } else {
+                promoImg.removeAttribute('src');
+                promoImg.style.display = 'none';
+                promoEmoji.style.display = '';
+            }
             document.getElementById('promo-badge-hoy').style.display = esHoy ? 'inline-block' : 'none';
             document.getElementById('promo-vigencia').textContent = esHoy ? '✅ VÁLIDA HOY' : '📅 VISTA PREVIA';
             document.getElementById('promo-card').classList.toggle('es-hoy', esHoy);
@@ -1457,6 +1486,7 @@
         // ===== Popup promo del día =====
         const popup = document.getElementById('promo-popup');
         const popupEmoji = document.getElementById('promo-popup-emoji');
+        const popupImg = document.getElementById('promo-popup-img');
         const popupTitulo = document.getElementById('promo-popup-titulo');
         const popupDesc = document.getElementById('promo-popup-desc');
         const popupPrecios = document.getElementById('promo-popup-precios');
@@ -1466,6 +1496,15 @@
         (function llenarPopupPromo() {
             const p = promos[diaHoy];
             popupEmoji.textContent = p.emoji || '🎉';
+            if (p.img) {
+                popupImg.src = p.img;
+                popupImg.style.display = 'block';
+                popupEmoji.style.display = 'none';
+            } else {
+                popupImg.removeAttribute('src');
+                popupImg.style.display = 'none';
+                popupEmoji.style.display = '';
+            }
             popupTitulo.textContent = p.titulo;
             popupDesc.textContent = p.detalle;
             if (p.precioPromo) {
