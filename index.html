@@ -440,6 +440,80 @@
         }
         .modal-pedir:hover { background: #1ebe57; }
 
+        /* ===== POPUP PROMO DEL DÍA ===== */
+        .promo-popup-overlay { z-index: 3000; }
+        .promo-popup {
+            max-width: 420px;
+            overflow: hidden;
+        }
+        .promo-popup-media {
+            height: 190px;
+            background: linear-gradient(135deg, var(--chocolate) 0%, var(--chocolate-claro) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .promo-popup-media::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 180%;
+            background: radial-gradient(circle, rgba(232,150,58,0.35), transparent 70%);
+        }
+        .promo-popup-emoji {
+            font-size: 5.4rem;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.35));
+        }
+        .promo-popup-cuerpo {
+            padding: 22px 24px 26px;
+            text-align: center;
+        }
+        .promo-popup-label {
+            display: inline-block;
+            background: #d9480f;
+            color: white;
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .promo-popup-cuerpo h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.7rem;
+            color: var(--chocolate);
+            margin-bottom: 8px;
+        }
+        .promo-popup-desc {
+            font-size: 0.95rem;
+            color: #6b5445;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .promo-popup .promo-precios {
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .promo-popup-ver {
+            display: block;
+            background: var(--chocolate);
+            color: white;
+            text-align: center;
+            padding: 13px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .promo-popup-ver:hover { background: var(--chocolate-claro); }
+
         /* ===== PROMOS DE LA SEMANA ===== */
         .semana-tabs {
             display: flex;
@@ -1081,6 +1155,23 @@
         <p style="margin-top:20px; font-size:0.8rem; opacity:0.6;">Hecho en Valdivia, Chile 🇨🇱</p>
     </footer>
 
+    <!-- ===== POPUP PROMO DEL DÍA ===== -->
+    <div class="modal-overlay promo-popup-overlay" id="promo-popup">
+        <div class="modal promo-popup">
+            <button class="modal-cerrar" id="promo-popup-cerrar" aria-label="Cerrar">✕</button>
+            <div class="promo-popup-media">
+                <span class="promo-popup-emoji" id="promo-popup-emoji">🎉</span>
+            </div>
+            <div class="promo-popup-cuerpo">
+                <span class="promo-popup-label">🔥 PROMO DE HOY</span>
+                <h2 id="promo-popup-titulo"></h2>
+                <p class="promo-popup-desc" id="promo-popup-desc"></p>
+                <div class="promo-precios" id="promo-popup-precios"></div>
+                <a href="#promos" class="promo-popup-ver" id="promo-popup-ver">Ver promos de la semana 👉</a>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== MODAL DETALLE PRODUCTO ===== -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
@@ -1232,10 +1323,10 @@
         // Campos por promo: titulo, detalle, emoji, precioOriginal, precioPromo, ahorro
         // Deja precios vacíos ("") mientras no tengas la promo confirmada
         const promos = {
-            lunes:    { titulo: "Promo Lunes",     detalle: "PRÓXIMAMENTE — escríbeme y te cuento la promo de hoy 👀", emoji: "🧇", precioOriginal: "", precioPromo: "", ahorro: "" },
-            martes:   { titulo: "Promo Martes",    detalle: "PRÓXIMAMENTE — promo de martes para el carrito 🛵", emoji: "🥟", precioOriginal: "", precioPromo: "", ahorro: "" },
-            miercoles:{ titulo: "Promo Miércoles", detalle: "PRÓXIMAMENTE — mitad de semana con sabor 🍥", emoji: "🍣", precioOriginal: "", precioPromo: "", ahorro: "" },
-            jueves:   { titulo: "Promo Jueves",    detalle: "PRÓXIMAMENTE — promo de jueves lista para ti 🧇", emoji: "🥤", precioOriginal: "", precioPromo: "", ahorro: "" },
+            lunes:    { titulo: "Waffle Salado",     detalle: "Promo de waffle salado — ¡muy pronto le ponemos precio! Pregunta por WhatsApp 👀", emoji: "🧇", precioOriginal: "", precioPromo: "", ahorro: "" },
+            martes:   { titulo: "Martes de Handrolls", detalle: "2 handrolls Pollo & Palta por $6.000 — llévate tu combo y ahorra 🍣", emoji: "🍣", precioOriginal: "2x $7.000", precioPromo: "2x $6.000", ahorro: "$1.000" },
+            miercoles:{ titulo: "Miércoles de Empanadas", detalle: "Empanadas: 1 por $3.000 o 2 por $5.000 — elige tu relleno favorito 🥟", emoji: "🥟", precioOriginal: "2x $6.000", precioPromo: "2x $5.000", ahorro: "$1.000" },
+            jueves:   { titulo: "Jueves de Pizza",    detalle: "Pizza familiar a elección + bebida de 1 litro por $8.990 🍕", emoji: "🍕", precioOriginal: "", precioPromo: "$8.990", ahorro: "" },
             viernes:  { titulo: "Viernes de Waffles", detalle: "¡Solo por hoy! Waffle a $5.000 c/u — elige tu base (Nutella, manjar o miel) y agrégale lo que quieras 🧇", emoji: "🧇", precioOriginal: "$5.500", precioPromo: "$5.000", ahorro: "$500" },
             sabado:   { titulo: "Promo Sábado",    detalle: "PRÓXIMAMENTE — sábado de sabores del sur ☀️", emoji: "🥞", precioOriginal: "", precioPromo: "", ahorro: "" },
             domingo:  { titulo: "Promo Domingo",   detalle: "PRÓXIMAMENTE — domingo en familia 🍪", emoji: "🍪", precioOriginal: "", precioPromo: "", ahorro: "" }
@@ -1300,6 +1391,49 @@
         promoHero.style.display = 'inline-block';
         document.getElementById('promo-hero-text').textContent = promos[diaHoy].titulo;
         promoHero.addEventListener('click', () => document.getElementById('promos').scrollIntoView({ behavior: 'smooth' }));
+
+        // ===== Popup promo del día =====
+        const popup = document.getElementById('promo-popup');
+        const popupEmoji = document.getElementById('promo-popup-emoji');
+        const popupTitulo = document.getElementById('promo-popup-titulo');
+        const popupDesc = document.getElementById('promo-popup-desc');
+        const popupPrecios = document.getElementById('promo-popup-precios');
+        const popupCerrar = document.getElementById('promo-popup-cerrar');
+        const popupVer = document.getElementById('promo-popup-ver');
+
+        (function llenarPopupPromo() {
+            const p = promos[diaHoy];
+            popupEmoji.textContent = p.emoji || '🎉';
+            popupTitulo.textContent = p.titulo;
+            popupDesc.textContent = p.detalle;
+            if (p.precioPromo) {
+                popupPrecios.innerHTML =
+                    (p.precioOriginal ? '<span class="precio-tachado-promo">' + p.precioOriginal + '</span>' : '') +
+                    '<span class="precio-promo">' + p.precioPromo + '</span>' +
+                    (p.ahorro ? '<span class="badge-ahorro">Ahorras ' + p.ahorro + '</span>' : '');
+            } else {
+                popupPrecios.innerHTML = '';
+            }
+            setTimeout(() => {
+                popup.classList.add('abierto');
+                document.body.style.overflow = 'hidden';
+            }, 900);
+        })();
+
+        function cerrarPopup() {
+            popup.classList.remove('abierto');
+            document.body.style.overflow = '';
+        }
+        popupCerrar.addEventListener('click', cerrarPopup);
+        popup.addEventListener('click', (e) => { if (e.target === popup) cerrarPopup(); });
+        popupVer.addEventListener('click', (e) => {
+            e.preventDefault();
+            cerrarPopup();
+            document.getElementById('promos').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && popup.classList.contains('abierto')) cerrarPopup();
+        });
 
         // ===== Abrir modal =====
         const overlay = document.getElementById('modal-overlay');
