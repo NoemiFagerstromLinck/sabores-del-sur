@@ -140,10 +140,10 @@
         <!-- Panel generador -->
         <section class="panel">
             <label for="url">🔗 URL del menú</label>
-            <input type="text" id="url" value="http://127.0.0.1:8017/index.html" spellcheck="false">
+            <input type="text" id="url" value="https://noemifagerstromlinck.github.io/sabores-del-sur/" spellcheck="false">
             <div class="aviso">
-                ⚠️ <b>URL local de prueba:</b> este QR abre el menú solo desde esta computadora.<br>
-                Cuando el sitio esté en Netlify, pega aquí la URL pública y descarga todo de nuevo.
+                ✅ <b>URL pública activa:</b> este QR abre el menú en vivo desde cualquier celular.<br>
+                Si cambias la URL del sitio, pégala aquí y descarga todo de nuevo.
             </div>
 
             <label style="margin-top:16px;">🎨 Estilo del código</label>
@@ -195,7 +195,7 @@
 
     <script>
         const $ = id => document.getElementById(id);
-        const obtenerUrl = () => $('url').value.trim() || "https://saboresdelsur.cl";
+        const obtenerUrl = () => $('url').value.trim() || "https://noemifagerstromlinck.github.io/sabores-del-sur/";
 
         // ===== Logo ORIGINAL de Sabores del Sur (embebido, funciona en file:// y servidor) =====
         // Badge circular (crema + anillo ámbar) para el centro del QR
