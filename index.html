@@ -522,6 +522,106 @@
             box-shadow: 0 10px 32px rgba(37,211,102,0.55);
         }
 
+        /* ===== FOTOS: MARCO Y ZOOM ===== */
+        .waffle-fotos img,
+        .fotos-dos img,
+        .producto-top img {
+            cursor: zoom-in;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px var(--ambar), 0 8px 18px rgba(74,44,26,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .waffle-fotos img:hover,
+        .fotos-dos img:hover,
+        .producto-top img:hover {
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 0 0 2px var(--ambar-claro), 0 14px 28px rgba(74,44,26,0.3);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .waffle-fotos img, .fotos-dos img, .producto-top img { transition: none; }
+        }
+
+        /* ===== VISOR DE FOTOS (LIGHTBOX) ===== */
+        .foto-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(22,11,5,0.97);
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .foto-lightbox.abierto { opacity: 1; visibility: visible; }
+        .foto-lightbox img {
+            max-width: 92vw;
+            max-height: 84vh;
+            border-radius: 14px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 4px rgba(255,255,255,0.92);
+            transform: scale(0.96);
+            transition: transform 0.25s ease;
+            object-fit: contain;
+            background: #241309;
+        }
+        .foto-lightbox.abierto img { transform: scale(1); }
+        .lb-cerrar {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(74,44,26,0.85);
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            z-index: 5;
+        }
+        .lb-cerrar:hover { background: #d9480f; }
+        .lb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 46px;
+            height: 46px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(74,44,26,0.85);
+            color: var(--crema);
+            font-size: 1.8rem;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 3px;
+            transition: background 0.2s, transform 0.2s;
+            z-index: 5;
+        }
+        .lb-nav:hover { background: var(--ambar); color: var(--chocolate); transform: translateY(-50%) scale(1.08); }
+        .lb-nav.lb-izq { left: 12px; }
+        .lb-nav.lb-der { right: 12px; }
+        .lb-contador {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: var(--crema);
+            font-size: 0.82rem;
+            font-weight: 600;
+            opacity: 0.85;
+            letter-spacing: 1px;
+        }
+
         /* ===== ANIMACIONES ===== */
         .fade-in { animation: entrada 0.5s ease both; }
         @keyframes entrada {
@@ -825,6 +925,77 @@
         </div>
         <p class="nota">Hecho en Valdivia, Chile 🇨🇱</p>
     </footer>
+
+    <!-- ===== VISOR DE FOTOS ===== -->
+    <div class="foto-lightbox" id="fotoLightbox" aria-hidden="true">
+        <button class="lb-cerrar" id="lbCerrar" type="button" aria-label="Cerrar">✕</button>
+        <button class="lb-nav lb-izq" id="lbIzq" type="button" aria-label="Foto anterior">‹</button>
+        <img id="lbImg" src="" alt="">
+        <button class="lb-nav lb-der" id="lbDer" type="button" aria-label="Foto siguiente">›</button>
+        <div class="lb-contador" id="lbContador"></div>
+    </div>
+
+    <script>
+        (function () {
+            var fotos = Array.prototype.slice.call(
+                document.querySelectorAll('.waffle-fotos img, .fotos-dos img, .producto-top img')
+            );
+            if (!fotos.length) return;
+
+            var lb = document.getElementById('fotoLightbox');
+            var lbImg = document.getElementById('lbImg');
+            var lbContador = document.getElementById('lbContador');
+            var idx = 0;
+
+            function pintar() {
+                var f = fotos[idx];
+                lbImg.src = f.currentSrc || f.src;
+                lbImg.alt = f.alt || '';
+                lbContador.textContent = (idx + 1) + ' / ' + fotos.length;
+            }
+            function abrir(i) {
+                idx = i;
+                pintar();
+                lb.classList.add('abierto');
+                lb.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+            function cerrar() {
+                lb.classList.remove('abierto');
+                lb.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+            function mover(d) {
+                idx = (idx + d + fotos.length) % fotos.length;
+                pintar();
+            }
+
+            fotos.forEach(function (f, i) {
+                f.addEventListener('click', function () { abrir(i); });
+            });
+
+            document.getElementById('lbCerrar').addEventListener('click', cerrar);
+            document.getElementById('lbIzq').addEventListener('click', function (e) { e.stopPropagation(); mover(-1); });
+            document.getElementById('lbDer').addEventListener('click', function (e) { e.stopPropagation(); mover(1); });
+            lb.addEventListener('click', function (e) { if (e.target === lb) cerrar(); });
+            document.addEventListener('keydown', function (e) {
+                if (!lb.classList.contains('abierto')) return;
+                if (e.key === 'Escape') cerrar();
+                if (e.key === 'ArrowLeft') mover(-1);
+                if (e.key === 'ArrowRight') mover(1);
+            });
+
+            // Deslizar con el dedo en el celular
+            var x0 = null;
+            lb.addEventListener('touchstart', function (e) { x0 = e.changedTouches[0].clientX; }, { passive: true });
+            lb.addEventListener('touchend', function (e) {
+                if (x0 === null) return;
+                var dx = e.changedTouches[0].clientX - x0;
+                if (Math.abs(dx) > 45) mover(dx < 0 ? 1 : -1);
+                x0 = null;
+            }, { passive: true });
+        })();
+    </script>
 
 </body>
 </html>
