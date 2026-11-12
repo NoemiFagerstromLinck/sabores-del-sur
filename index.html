@@ -232,6 +232,20 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+        .waffle-fotos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            padding: 14px 18px 0;
+        }
+        .waffle-fotos img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+            background: var(--crema-2);
+        }
         .builder-body { padding: 6px 18px 16px; }
         .paso {
             display: flex;
@@ -487,6 +501,11 @@
                     </div>
                     <span class="builder-precio">$7.000</span>
                 </div>
+                <div class="waffle-fotos">
+                    <img src="img/waffle-salado-1.jpg" alt="Waffle salado con choclo y palta">
+                    <img src="img/waffle-salado-2.jpg" alt="Waffle salado con carne y salsas">
+                    <img src="img/waffle-salado-3.jpg" alt="Waffle salado con palta y cilantro">
+                </div>
                 <div class="builder-body">
                     <div class="paso">
                         <span class="paso-num">1</span>
@@ -538,6 +557,11 @@
                         <p>Base + agregados + crema + salsas</p>
                     </div>
                     <span class="builder-precio">$6.000</span>
+                </div>
+                <div class="waffle-fotos">
+                    <img src="img/waffle-dulce-1.jpg" alt="Waffle dulce con crema y chocolate">
+                    <img src="img/waffle-dulce-2.jpg" alt="Waffle dulce con crema y frambuesa">
+                    <img src="img/waffle-dulce-3.jpg" alt="Waffle dulce con crema y manjar">
                 </div>
                 <div class="builder-body">
                     <div class="paso">
